@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if mode == 'edit' %}
+<div class="container">
+    <div class="header">
+        <h1>创建干膜标准</h1>
+        <p>配置技术参数并提交主数据到数据库</p>
+    </div>
+    
+    <div class="dual-form-container">
+        <!-- 左侧: JSON配置表单 -->
+        <div class="form-panel">
+            <h2>技术参数配置</h2>
+            <form id="configForm" >
+                {% csrf_token %}
+                {{ config_form.as_p }}
+                <button type="button" id="generateJsonBtn" class="btn btn-secondary">
+                    生成JSON配置
+                </button>
+            </form>
+            
+            <div class="json-preview">
+                <h3>JSON预览</h3>
+                <pre id="jsonPreview">配置将在此处显示...</pre>
+            </div>
+        </div>
+        
+        <!-- 右侧: 主数据表单 -->
+        <div class="form-panel">
+            <h2>主数据信息</h2>
+            <form method="POST" id="mainForm">
+                {% csrf_token %}
+                {{ main_form.as_p }}
+                
+                <input type="hidden" id="configJsonData" name="config_json" value="">
+                
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary">
+                        提交到数据库
+                    </button>
+                    <button type="button" id="copyConfigBtn" class="btn btn-outline-secondary">
+                        复制JSON配置
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const configForm = document.getElementById('configForm');
+    const mainForm = document.getElementById('mainForm');
+    const generateBtn = document.getElementById('generateJsonBtn');
+    const jsonPreview = document.getElementById('jsonPreview');
+    const configJsonData = document.getElementById('configJsonData');
+    const copyBtn = document.getElementById('copyConfigBtn');
+    
+    // 生成JSON配置
+    generateBtn.addEventListener('click', function() {
+        formData = new FormData(configForm);
+        formData.append('generate-json', 'true');
+        fetch("{% url 'dryfilm_standard_edit' dryfilm_standard.product_name %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': configForm.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                jsonPreview.textContent = data.json_data;
+                configJsonData.value = data.json_data;
+                
+                // 高亮显示JSON
+                jsonPreview.innerHTML = syntaxHighlight(JSON.parse(data.json_data));
+                
+                // 在主表单中显示确认消息
+                const jsonInput = mainForm.querySelector('[name=config_json]');
+                jsonInput.value = data.json_data;
+            } else {
+                jsonPreview.textContent = '配置生成失败，请检查输入';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            jsonPreview.textContent = '发生错误，请重试';
+        });
+    });
+    
+    // 复制JSON配置
+    copyBtn.addEventListener('click', function() {
+        if (configJsonData.value) {
+            navigator.clipboard.writeText(configJsonData.value)
+                .then(() => {
+                    alert('JSON配置已复制到剪贴板');
+                })
+                .catch(err => {
+                    console.error('复制失败:', err);
+                });
+        } else {
+            alert('请先生成JSON配置');
+        }
+    });
+    
+    // JSON语法高亮函数
+    function syntaxHighlight(json) {
+        const jsonStr = JSON.stringify(json, null, 2);
+        return jsonStr.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            let cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+    
+    // 初始时隐藏JSON配置字段
+    document.querySelector('[for="id_config_json"]').style.display = 'none';
+    document.getElementById('id_config_json').style.display = 'none';
+});
+</script>
+
+{% else %}
+
+<div class="container">
+    <div class="header">
+        <h1>创建干膜标准</h1>
+        <p>配置技术参数并提交主数据到数据库</p>
+    </div>
+    
+    <div class="dual-form-container">
+        <!-- 左侧: JSON配置表单 -->
+        <div class="form-panel">
+            <h2>技术参数配置</h2>
+            <form id="configForm" >
+                {% csrf_token %}
+                {{ config_form.as_p }}
+                <button type="button" id="generateJsonBtn" class="btn btn-secondary">
+                    生成JSON配置
+                </button>
+            </form>
+            
+            <div class="json-preview">
+                <h3>JSON预览</h3>
+                <pre id="jsonPreview">配置将在此处显示...</pre>
+            </div>
+        </div>
+        
+        <!-- 右侧: 主数据表单 -->
+        <div class="form-panel">
+            <h2>主数据信息</h2>
+            <form method="POST" id="mainForm">
+                {% csrf_token %}
+                {{ main_form.as_p }}
+                
+                <input type="hidden" id="configJsonData" name="config_json" value="">
+                
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary">
+                        提交到数据库
+                    </button>
+                    <button type="button" id="copyConfigBtn" class="btn btn-outline-secondary">
+                        复制JSON配置
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const configForm = document.getElementById('configForm');
+    const mainForm = document.getElementById('mainForm');
+    const generateBtn = document.getElementById('generateJsonBtn');
+    const jsonPreview = document.getElementById('jsonPreview');
+    const configJsonData = document.getElementById('configJsonData');
+    const copyBtn = document.getElementById('copyConfigBtn');
+    
+    // 生成JSON配置
+    generateBtn.addEventListener('click', function() {
+        formData = new FormData(configForm);
+        formData.append('generate-json', 'true');
+        fetch("{% url 'create_dryfilm_standard' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': configForm.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                jsonPreview.textContent = data.json_data;
+                configJsonData.value = data.json_data;
+                
+                // 高亮显示JSON
+                jsonPreview.innerHTML = syntaxHighlight(JSON.parse(data.json_data));
+                
+                // 在主表单中显示确认消息
+                const jsonInput = mainForm.querySelector('[name=config_json]');
+                jsonInput.value = data.json_data;
+            } else {
+                jsonPreview.textContent = '配置生成失败，请检查输入';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            jsonPreview.textContent = '发生错误，请重试';
+        });
+    });
+    
+    // 复制JSON配置
+    copyBtn.addEventListener('click', function() {
+        if (configJsonData.value) {
+            navigator.clipboard.writeText(configJsonData.value)
+                .then(() => {
+                    alert('JSON配置已复制到剪贴板');
+                })
+                .catch(err => {
+                    console.error('复制失败:', err);
+                });
+        } else {
+            alert('请先生成JSON配置');
+        }
+    });
+    
+    // JSON语法高亮函数
+    function syntaxHighlight(json) {
+        const jsonStr = JSON.stringify(json, null, 2);
+        return jsonStr.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            let cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+    
+    // 初始时隐藏JSON配置字段
+    document.querySelector('[for="id_config_json"]').style.display = 'none';
+    document.getElementById('id_config_json').style.display = 'none';
+});
+</script>
+
+{% endif %}
+
+
+
+<style>
+.dual-form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.form-panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 25px;
+}
+
+.form-panel h2 {
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    color: #2c3e50;
+}
+
+.json-preview {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.json-preview pre {
+    white-space: pre-wrap;
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+/* JSON 语法高亮 */
+.key { color: #ff79c6; }
+.string { color: #50fa7b; }
+.number { color: #bd93f9; }
+.boolean { color: #ff79c6; }
+.null { color: #ff79c6; }
+
+.form-footer {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-secondary {
+    background: #2ecc71;
+    color: white;
+}
+
+.btn-outline-secondary {
+    background: white;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>权限测试页面</h2>
+    <div class="card mt-4">
+        <div class="card-body">
+            <p><strong>您的IP地址:</strong> {{ client_ip }}</p>
+            <p><strong>您的角色:</strong> <span class="badge bg-primary">{{ user_role }}</span></p>
+            
+            <div class="mt-4">
+                <h4>权限测试</h4>
+                <div class="alert alert-info">
+                    <p>此页面用于测试权限系统是否正常工作。</p>
+                    <p>您的角色决定了您能访问哪些功能。</p>
+                </div>
+                
+                {% if user_role == 'admin' %}
+                <div class="alert alert-success">
+                    <h5>管理员功能</h5>
+                    <p>您可以看到此内容，因为您是管理员。</p>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-success">进入管理员面板</a>
+                </div>
+                {% endif %}
+                
+                {% if user_role == 'inspector' %}
+                <div class="alert alert-warning">
+                    <h5>质检员功能</h5>
+                    <p>您可以看到此内容，因为您是质检员。</p>
+                    <a href="{% url 'inspector_dashboard' %}" class="btn btn-warning">进入质检员面板</a>
+                </div>
+                {% endif %}
+                
+                {% if user_role == 'user' %}
+                <div class="alert alert-secondary">
+                    <h5>普通用户功能</h5>
+                    <p>您可以看到此内容，因为您是普通用户。</p>
+                    <p>如需更多权限，请联系管理员。</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}胶粘剂产品列表{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-grid mb-4" style="grid-template-columns: auto 1fr;"> 
+        <!-- 标题在左，按钮组在右 -->
+        <h2 class="text-primary">胶粘剂产品列表</h2>
+        
+        <div class="d-flex justify-content-end"> <!-- 右对齐按钮组 -->
+            <a href="#" class="btn btn-success me-2">
+                <i class="bi bi-plus-circle me-1"></i> 更新产品标准
+            </a>
+            <a href="{% url 'adhesive_create' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> 添加新记录
+            </a>
+        </div>
+    </div>
+    
+    {% if products %}
+
+    <div class="alert alert-info">
+        共找到 {{ products|length }} 条记录
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>批号</th>
+                            <th>产品牌号</th>
+                            <th>产线</th>
+                            <th>测试日期</th>
+                            <th>理化性能判定</th>
+                            <th>胶带性能判定</th>
+                            <th>最终判定</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.batch_number }}</td>
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.production_line }}</td>
+                            <td>{{ product.test_date|date:"Y-m-d" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if product.physical_judgment == 'qualified' %}bg-success
+                                    {% elif product.physical_judgment == 'unqualified' %}bg-danger
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ product.get_physical_judgment_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if product.tape_judgment == 'qualified' %}bg-success
+                                    {% elif product.tape_judgment == 'unqualified' %}bg-danger
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ product.get_tape_judgment_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if product.finally_judgment == 'qualified' %}bg-success
+                                    {% elif product.finally_judgment == 'unqualified' %}bg-danger
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ product.get_finally_judgment_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'adhesive_edit' product.id %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> 编辑
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <h4 class="text-muted">暂无胶粘剂产品数据</h4>
+            <p class="text-muted">请点击右上角"添加新记录"按钮创建第一条记录</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

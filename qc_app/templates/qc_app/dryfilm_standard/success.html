@@ -1,0 +1,116 @@
+<!-- templates/dryfilm/success.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container success-container">
+    <div class="card">
+        <div class="card-header">
+            <h2>干膜标准创建成功</h2>
+        </div>
+        
+        <div class="card-body">
+            <div class="success-alert">
+                <i class="check-icon">✓</i>
+                <p>已成功创建干膜标准记录</p>
+            </div>
+            
+            <div class="record-details">
+                <h3>记录详情</h3>
+                
+                <div class="detail-item">
+                    <strong>产品名称:</strong> {{ record.product_name }}
+                </div>
+                
+                <div class="detail-item">
+                    <strong>编制人:</strong> {{ record.producer }}
+                </div>
+                
+                <div class="detail-item">
+                    <strong>创建时间:</strong> {{ record.created_at }}
+                </div>
+            </div>
+            
+            <div class="json-config">
+                <h3>配置参数</h3>
+                <pre class="json-output">{{ record.get_config_display }}</pre>
+            </div>
+            
+            <a href="{% url 'create_dryfilm_standard' %}" class="btn btn-primary">
+                创建另一个标准
+            </a>
+
+            <a href="{% url 'dryfilm_standard_list' %}" class="btn btn-primary">
+                标准列表
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    max-width: 800px;
+    margin: 50px auto;
+}
+
+.card {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    background: #27ae60;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.success-alert {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.check-icon {
+    font-size: 24px;
+    background: #28a745;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-item {
+    margin-bottom: 15px;
+    font-size: 18px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.json-config {
+    margin-top: 30px;
+}
+
+.json-output {
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow: auto;
+}
+</style>
+{% endblock %}

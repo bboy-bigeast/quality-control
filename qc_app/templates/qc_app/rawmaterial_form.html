@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                {% if mode == 'create' %}添加原料数据{% else %}编辑原料数据{% endif %}
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- 基本信息组 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2">基本信息</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">原料批号</label>
+                            {{ form.batch_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">原料名称</label>
+                            {{ form.material_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">原料类型</label>
+                            {{ form.material_type }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">入库日期</label>
+                            {{ form.received_date }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">供应商</label>
+                            {{ form.supplier }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">有效期</label>
+                            {{ form.expiry_date }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">检测人</label>
+                            {{ form.inspector }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 判定结果组 (只显示一次) -->
+                <div class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">检验结果</label>
+                            <select name="test_result" class="form-select" id="id_factory_judgment">
+                                <option value="qualified" {% if form.factory_judgment.value == 'qualified' %}selected{% endif %}>合格</option>
+                                <option value="unqualified" {% if form.factory_judgment.value == 'unqualified' %}selected{% endif %}>不合格</option>
+                                <option value="pending" {% if form.factory_judgment.value == 'pending' or not form.factory_judgment.value %}selected{% endif %}>待判定</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 产品数据组 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2">原料数据</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">外观</label>
+                            {{ form.appearance }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">纯度</label>
+                            {{ form.purity }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">水分</label>
+                            {{ form.moisture }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">阻聚剂</label>
+                            {{ form.inhibitor }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">出峰位置</label>
+                            {{ form.peak_position }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">乙醇含量</label>
+                            {{ form.ethanol_content }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">酸度</label>
+                            {{ form.acidity }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">备注</label>
+                            {{ form.remarks }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-2"></i>保存
+                    </button>
+                    <a href="{% url 'rawmaterial_list' %}" class="btn btn-outline-secondary">
+                        返回列表
+                    </a>
+                </div>
+                
+    </div>            
+    <!-- 变更日志 - 只在编辑模式显示 -->
+    {% if mode == 'edit' %}
+    <div class="card mt-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">变更日志</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>字段</th>
+                        <th>旧值</th>
+                        <th>新值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for change in product.change_log %}
+                    <tr>
+                        <td>{{ change.timestamp|date:"Y-m-d H:i" }}</td>
+                        <td>{{ change.field }}</td>
+                        <td>{{ change.old_value }}</td>
+                        <td>{{ change.new_value }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">暂无变更记录</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

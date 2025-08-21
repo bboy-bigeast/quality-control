@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}分析中心{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>质量分析</h2>
+        <div>
+            <a href="#" class="btn btn-success me-2">
+                <i class="bi bi-plus-circle"></i> 新建分析
+            </a>
+            <a href="#" class="btn btn-info">
+                <i class="bi bi-graph-up"></i> 图表库
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- 分析概览卡片 -->
+        <div class="col-md-3 mb-4">
+            <div class="card border-primary h-100">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-speedometer2"></i> 分析概览
+                </div>
+                <div class="card-body">
+                    <canvas id="analysisOverviewChart"></canvas>
+                    <div class="mt-3">
+                        <p class="mb-1">干膜产品分析: 24</p>
+                        <p class="mb-1">胶粘剂分析: 18</p>
+                        <p class="mb-1">原料分析: 12</p>
+                        <p class="mb-0">工艺分析: 9</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 分析列表 -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>分析编号</th>
+                                    <th>分析标题</th>
+                                    <th>分析类型</th>
+                                    <th>分析人</th>
+                                    <th>分析日期</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analysis in analyses %}
+                                <tr>
+                                    <td>{{ analysis.analysis_id }}</td>
+                                    <td>{{ analysis.title }}</td>
+                                    <td>{{ analysis.get_analysis_type_display }}</td>
+                                    <td>{{ analysis.performed_by }}</td>
+                                    <td>{{ analysis.performed_date|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-bar-chart-line"></i> 查看
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 趋势图卡片 -->
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-arrow-up-right-square"></i> 质量趋势分析 (最近12个月)
+        </div>
+        <div class="card-body">
+            <canvas id="qualityTrendChart" height="250"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+// 使用Chart.js实现图表
+document.addEventListener('DOMContentLoaded', function() {
+    // 分析概览图
+    const overviewCtx = document.getElementById('analysisOverviewChart').getContext('2d');
+    const overviewChart = new Chart(overviewCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['干膜产品', '胶粘剂', '原料', '工艺'],
+            datasets: [{
+                data: [24, 18, 12, 9],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // 质量趋势图
+    const trendCtx = document.getElementById('qualityTrendChart').getContext('2d');
+    const trendChart = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            datasets: [{
+                label: '合格率(%)',
+                data: [96.2, 96.5, 97.1, 97.3, 97.8, 98.1, 98.5, 98.7, 98.9, 99.2, 99.4, 99.5],
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                tension: 0.3,
+                fill: true
+            }, {
+                label: '客户投诉(次)',
+                data: [8, 7, 6, 5, 4, 3, 3, 2, 2, 1, 1, 0],
+                borderColor: '#e74a3b',
+                backgroundColor: 'rgba(231, 74, 59, 0.1)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

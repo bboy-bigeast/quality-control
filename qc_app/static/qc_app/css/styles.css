@@ -1,0 +1,122 @@
+/* 统一表单样式 */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.form-control, .form-select {
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* 卡片样式 */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+    font-size: 1.1rem;
+}
+
+/* 分区标题 */
+h4.border-bottom {
+    font-size: 1.1rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #0d6efd;
+    color: #0d6efd;
+}
+
+/* 表格样式 */
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+/* 按钮间距 */
+.btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .content-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    .table-container {
+        padding: 0.5rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/*分页样式*/
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 25px 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.pagination a {
+    display: block;
+    padding: 8px 16px;
+    margin: 0 4px;
+    text-decoration: none;
+    color: #3498db;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background: linear-gradient(to bottom, #e9ecef, #dae0e5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: #2c3e50;
+    border-color: #ced4da;
+}
+
+.pagination .current {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #4e73df, #224abe);
+    color: white;
+    font-weight: 600;
+    border: 1px solid #224abe;
+    box-shadow: 0 3px 6px rgba(78, 115, 223, 0.4);
+}
+
+/* 上一页/下一页特定样式 */
+.pagination .step-links a:first-child,
+.pagination .step-links a:last-child {
+    background-color: #e3f2fd;
+    border-color: #bbdefb;
+}
+
+/* 禁用状态（首尾页不可用时） */
+.pagination .disabled {
+    color: #6c757d;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* 增加文字图标的间隔 */
+.pagination a i[class*="fa-"] {
+    margin: 0 5px;
+}

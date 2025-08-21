@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                {% if mode == 'create' %}胶粘剂产品{% else %}编辑产品信息{% endif %}
+            </h3>
+        </div>
+        
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- 基本信息组 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2 border-primary text-primary">基本信息</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">批号</label>
+                            {{ form.batch_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">产品牌号</label>
+                            {{ form.product_id }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">产线</label>
+                            {{ form.production_line }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">检测人</label>
+                            {{ form.inspector }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">测试日期</label>
+                            {{ form.test_date }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">样品类别</label>
+                            {{ form.sample_type }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">备注</label>
+                            {{ form.remarks }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 判定结果组 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2 border-primary text-primary">判定结果</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">理化性能判定</label>
+                            {{ form.physical_judgment }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">胶带性能判定</label>
+                            {{ form.tape_judgment }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">最终判定</label>
+                            {{ form.finally_judgment }}
+                        </div>                        
+                    </div>
+                </div>
+                
+                <!-- 物理化学指标组 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2 border-primary text-primary">理化指标</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">外观</label>
+                            {{ form.appearance }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">固含</label>
+                            {{ form.solid_content }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">粘度</label>
+                            {{ form.viscosity }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">酸值</label>
+                            {{ form.acid_value }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">水分</label>
+                            {{ form.moisture }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">残单</label>
+                            {{ form.residue }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">重均分子量</label>
+                            {{ form.molecular_weight }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">PDI</label>
+                            {{ form.pdi }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">色度</label>
+                            {{ form.color }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 胶粘剂特有性能 -->
+                <div class="mb-4">
+                    <h4 class="border-bottom pb-2 border-primary text-primary">胶带性能</h4>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">初粘 (No.)</label>
+                            {{ form.initial_stick }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">剥离强度 (N/mm)</label>
+                            {{ form.peel }}
+                        </div>                        
+                        <div class="col-md-4">
+                            <label class="form-label">高温持粘 (mm)</label>
+                            {{ form.high_temp_hold }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">常温持粘 (mm)</label>
+                            {{ form.normal_temp_hold }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">定荷重剥离 (mm)</label>
+                            {{ form.peel_under_load }}
+                        </div>                        
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-2"></i>保存
+                    </button>
+                    <a href="{% url 'adhesive_list' %}" class="btn btn-outline-secondary">
+                        返回列表
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Bootstrap表单验证
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.needs-validation');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+});
+</script>
+
+<style>
+/* 紫色主题表单样式 */
+.card-header {
+    background: linear-gradient(135deg, #11b8cb 0%, #7025fc 100%);
+}
+
+.border-primary {
+    border-color: #6a11cb !important;
+}
+
+.text-primary {
+    color: #6a11cb !important;
+}
+
+.form-label {
+    color: #5a4fcf;
+    font-weight: 500;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
+}
+
+.invalid-feedback {
+    color: #dc3545;
+}
+</style>
+{% endblock %}
