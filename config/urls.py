@@ -40,17 +40,26 @@ urlpatterns = [
     path('adhesive/', views.adhesive_list, name='adhesive_list'),
     path('adhesive/create/', views.adhesive_create, name='adhesive_create'),
     path('adhesive/edit/<uuid:pk>/', views.adhesive_edit, name='adhesive_edit'),
+    path('adhesive/delete/', views.adhesive_delete, name='adhesive_delete'),
     #原料模板
     path('rawmaterial/', views.rawmaterial_list, name='rawmaterial_list'),
     path('rawmaterial/create/', views.rawmaterial_create, name='rawmaterial_create'),
     path('rawmaterial/edit/<uuid:pk>/', views.rawmaterial_edit, name='rawmaterial_edit'),
+    path('rawmaterial/delete/', views.rawmaterial_delete, name='rawmaterial_delete'),
     #小试模板
     path('trialproduct/', views.trialproduct_list, name='trialproduct_list'),
     path('trialproduct/create/', views.trialproduct_create, name='trialproduct_create'),
     path('trialproduct/edit/<uuid:pk>/', views.trialproduct_edit, name='trialproduct_edit'),
+    path('trialproduct/delete/', views.trialproduct_delete, name='trialproduct_delete'),
     #报告中心模板
     path('reports/', views.report_list, name='report_list'),
+    path('reports/create/', views.report_create, name='report_create'),
+    path('reports/edit/<uuid:pk>/', views.report_edit, name='report_edit'),
+    path('reports/delete/', views.report_delete, name='report_delete'),
     #分析中心模板
     path('analysis/', views.analysis_list, name='analysis_list'),
+    path('analysis/create/', views.analysis_create, name='analysis_create'),
+    path('analysis/edit/<uuid:pk>/', views.analysis_edit, name='analysis_edit'),
+    path('analysis/delete/', views.analysis_delete, name='analysis_delete'),
 
 ]
